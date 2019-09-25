@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import Fab from '@material-ui/core/Fab';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 const styles = theme => ({
   root: {
@@ -83,10 +79,6 @@ class App extends Component {
     console.log(this.state)
   }
 
-  func_Tel() {
-    console.log("hi")
-  }
-
   componentDidMount() {
     // TODO: Context APIでこのprops drilling probremを解消する。
     // props drilling probrem: propsをバケツリレーのように子コンポーネントに渡していくこと
@@ -104,14 +96,6 @@ class App extends Component {
 
     return (
       <div className={classes.root}>
-        <CssBaseline />
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <Typography variant="h5">森岡家結婚感謝祭 キーパッド</Typography>
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
-
         {/* <h1>Your Answer: { this.state.answer }</h1> */}
 
         <div className={classes.buttonAlign}>

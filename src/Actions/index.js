@@ -42,6 +42,16 @@ export const RANKING_EVENT = 'RANKING_EVENT'
 
 export const LOGIN = 'LOGIN'
 
+export const WAIT_STATE = 'WAIT_STATE'
+export const QID_STATE = 'QID_STATE'
+
+export const QUIZ_SET = 'QUIZ_SET'
+
+
+/* ================ */
+/*      ログイン     */
+/* ================ */
+
 // クイズ終了であることを示すstateをfirestoreに格納
 export const LogIn = (id) => dispatch => {
     const provider = new firebase.auth.GoogleAuthProvider()
@@ -61,23 +71,10 @@ export const authStateChanged = () => dispatch => {
     })
 }
 
+// 現在活用していないActionCreator
+// 利用は非推奨
 export const getRedirectResult = () => dispatch => {
     firebase.auth().getRedirectResult().then(function(result) {
-        if (result.credential) {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = result.credential.accessToken;
-        }
-        // The signed-in user info.
-        var uid = result.user.uid;
-
-        var docRef = db.collection("users").doc(`${uid}`);
-
-        docRef.set({
-            name: null,
-            uid: uid,
-        })
-
-        dispatch({ type: LOGIN, uid })
     }).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -86,21 +83,81 @@ export const getRedirectResult = () => dispatch => {
         var email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
-        // ...
+        console.log("user get error!")
+        console.log(errorCode, errorMessage, email, credential)
     });
 }
+
+/* ================ */
+/*   回答者          */
+/* ================ */
+
+// 回答者キーパッド側がwaitの状態をリアルタイムに取得するためのActionCreator
+export const readWaitState = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+    var docRef_wait = db.collection("state").doc("wait-state");
+
+    docRef.onSnapshot(function(doc) {
+        var response = doc.data()
+        const qid = response.quiz_id
+        dispatch({ type: QID_STATE, qid })
+    });
+
+    docRef_wait.onSnapshot(function(doc) {
+        var response = doc.data()
+        console.log(response)
+        const wait = response.wait
+        dispatch({ type: WAIT_STATE, wait })
+    });
+}
+
+// firestoreにユーザごとの回答を送信するActionCreator
+// uid: ユーザのuid(ユーザごとに一意に定まる)
+// qid: 問題ID(問題ごとに一意に定まる)
+// answer: そのユーザが選択した回答
+// TODO: 回答時間をセットできるようにせよ
+export const sendAnswer = (uid, qid, answer) => dispatch => {
+    var docRef = db.collection(qid).doc(uid);
+    console.log(answer)
+
+    docRef.set({
+        answer: answer,
+    }).then(function() {
+        console.log("I set the user " + uid + "'s answer! This user's answer is " + answer);
+        // reducerに送信する値はいらない
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
 
 /* ================ */
 /*   ゲームマスター   */
 /* ================ */
 
+// クイズ一覧を呼び出すActionCreator
+export const quizSet = () => dispatch => {
+    db.collection("question").onSnapshot(function(doc) {
+        console.log(doc)
+        doc.forEach((_doc) => {
+            var response = _doc.data()
+            response.id = _doc.id
+            dispatch({ type: QUIZ_SET, response })
+        });
+    });
+}
+
 // クイズ開始であることを示すstateをfirestoreに格納
-export const quizEvents = (id) => dispatch => {
+export const quizEvents = (qid) => dispatch => {
     var docRef = db.collection("state").doc("quiz-state");
     var docRef_wait = db.collection("state").doc("wait-state");
 
+    console.log(qid.id)
+
     docRef.update({
         readygo: true,
+        quiz_id: qid.id,
     }).then(function() {
         console.log("quiz start!");
         const readygo = true

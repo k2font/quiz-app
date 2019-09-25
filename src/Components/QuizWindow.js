@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { AutoComplete } from 'material-ui';
 import foo from '../img/bgimg.jpg'
 
 const useStyles = makeStyles(theme => ({
@@ -12,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         height: '100vh',
         background: `url(${foo})`,
     },
-    
+
     subAlign: {
         position: 'absolute',
         top: 0,

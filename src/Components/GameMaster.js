@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button';
-import _ from 'lodash'
 
 import NavigationBar from './NavigationBar'
+
+import _ from 'lodash'
 
 // Actionsを読み込む
 import {
@@ -13,6 +14,8 @@ import {
     quizCollectEvents,
     rankingEvents,
     waitQuiz,
+    readEvents,
+    quizSet,
 } from '../Actions'
 
 class GameMaster extends Component {
@@ -36,8 +39,13 @@ class GameMaster extends Component {
 
     // [優先度低]値をReducerから取ってきて状態管理を実施する(画面を間違って更新してしまった場合の対策)
 
-    async onQuizStartClick() {
-        await this.props.quizEvents()
+    componentDidMount() {
+        this.props.quizSet()
+    }
+
+    async onQuizStartClick(e, qid) {
+        console.log(qid)
+        await this.props.quizEvents(qid)
         this.setState({ readygo: true })
     }
 
@@ -55,6 +63,7 @@ class GameMaster extends Component {
 
     async onQuizCollectClick() {
         await this.props.quizCollectEvents()
+        this.setState({ collect_check: false })
         this.setState({ ranking: true })
     }
 
@@ -74,14 +83,35 @@ class GameMaster extends Component {
         })
     }
 
+    // 問題番号がかかれたButtonを描画する関数
+    // TODO: 問題idを指定して送出できるようにする
+    renderEvents() {
+        console.log(this.props.events)
+        return _.map(this.props.events, (event, index) => (
+            <Button
+                key={index}
+                variant="contained"
+                color="primary"
+                style={{margin: 10}}
+                disabled={this.state.readygo || this.state.answer_check || this.state.collect_check || this.state.ranking}
+                onClick={e => this.onQuizStartClick(e, event)}
+            >
+                {event.question}
+            </Button>
+        ))
+    }
+
     render() {
         return (
             <React.Fragment>
                 <NavigationBar />
-                <Button variant="contained" color="primary" style={{margin: 10}} disabled={this.state.readygo || this.state.answer_check} onClick={this.onQuizStartClick}>
-                    回答開始
-                </Button>
 
+                <h3>クイズ一覧</h3>
+                <div>
+                    {this.renderEvents()}
+                </div>
+
+                <h3>オペレーション</h3>
                 <Button variant="contained" color="primary" style={{margin: 10}} disabled={!this.state.readygo} onClick={this.onQuizEndClick}>
                     回答終了
                 </Button>
@@ -98,7 +128,7 @@ class GameMaster extends Component {
                     ランキング表示開始
                 </Button>
 
-                <Button variant="contained" color="secondary" style={{margin: 10}} disabled={!this.state.gonext} onClick={this.onGoNextClick}>
+                <Button variant="contained" color="secondary" style={{margin: 10}} onClick={this.onGoNextClick}>
                     次の問題へ(問題待機)
                 </Button>
             </React.Fragment>
@@ -107,6 +137,6 @@ class GameMaster extends Component {
 }
 
 const mapStateToProps = (state) => ({ events: state.events })
-const mapDispatchToProps = ({ quizEvents, quizEndEvents, quizCheckEvents, quizCollectEvents, rankingEvents, waitQuiz })
+const mapDispatchToProps = ({ quizEvents, quizEndEvents, quizCheckEvents, quizCollectEvents, rankingEvents, waitQuiz, readEvents, quizSet })
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameMaster)
