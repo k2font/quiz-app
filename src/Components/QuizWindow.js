@@ -1,138 +1,414 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+
+import { withStyles } from '@material-ui/styles';
+import { compose } from 'redux'
+
+import {
+    readWaitState,
+    readQuizContent,
+    quizCheckEvents,
+    quizCollectEvents,
+    quizSet,
+} from '../Actions'
+
 import foo from '../img/bgimg.jpg'
 
-const useStyles = makeStyles(theme => ({
+const styles = (theme) => ({
     root: {
-        margin: 0,
         width: '100vw',
         height: '100vh',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         background: `url(${foo})`,
     },
 
     subAlign: {
         position: 'absolute',
-        top: 0,
+        top: 200,
         right: 0,
         bottom: 0,
         left: 0,
         margin: 'auto',
-        width: '40%',
-        height: '40%',
+        width: '90%',
+        height: '90%',
+    },
+
+    ans_subAlign: {
+        position: 'absolute',
+        top: 700,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        margin: 'auto',
+        width: '90%',
+        height: '90%',
+    },
+
+    question_bg: {
+        position: 'absolute',
+        marginTop: 40,
+        marginLeft: 20,
+        width: '98%',
+        height: '90px',
+        background: 'white',
+    },
+
+    wait_bg: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        bottom: 300,
+        left: 0,
+        margin: 'auto',
+        textAlign: 'center',
+        fontSize: 100,
+        fontWeight: 800,
+        color: 'white',
+        width: '90%',
+        height: '0px',
+    },
+
+    question: {
+        position: 'absolute',
+        margin: 20,
+        textSize: 2000,
+        fontWeight: 900,
     },
 
     choiceA: {
         margin: 20,
         width: '100%',
-        height: '100%',
+        height: '430px',
         background: 'white',
+        textAlign:'center',
     },
 
     choiceB: {
         margin: 20,
         width: '100%',
-        height: '100%',
-        background: 'white'
+        height: '430px',
+        background: 'white',
+        textAlign:'center',
     },
 
     choiceC: {
         margin: 20,
         width: '100%',
-        height: '100%',
-        background: 'white'
+        height: '430px',
+        background: 'white',
+        textAlign:'center',
     },
 
     choiceD: {
         margin: 20,
         width: '100%',
-        height: '100%',
-        background: 'white'
+        height: '430px',
+        background: 'white',
+        textAlign:'center',
     },
 
     iconA: {
         position: 'relative',
         margin: 10,
-        borderRadius: 25,
-        width: '50px',
-        height: '50px',
+        borderRadius: 45,
+        width: '90px',
+        height: '90px',
+        top: 20,
+        left: 20,
+        fontSize: 70,
+        fontWeight: 900,
         background: 'red',
         textAlign: 'center',
         color: '#FFFFFF',
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     iconB: {
         position: 'relative',
         margin: 10,
-        borderRadius: 25,
-        width: '50px',
-        height: '50px',
+        borderRadius: 45,
+        width: '90px',
+        height: '90px',
+        top: 20,
+        left: 20,
+        fontSize: 70,
+        fontWeight: 900,
         background: 'blue',
         textAlign: 'center',
         color: '#FFFFFF',
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     iconC: {
         position: 'relative',
         margin: 10,
-        borderRadius: 25,
-        width: '50px',
-        height: '50px',
+        borderRadius: 45,
+        width: '90px',
+        height: '90px',
+        top: 20,
+        left: 20,
+        fontSize: 70,
+        fontWeight: 900,
         background: 'green',
         textAlign: 'center',
         color: '#FFFFFF',
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     iconD: {
         position: 'relative',
         margin: 10,
-        borderRadius: 25,
-        width: '50px',
-        height: '50px',
-        background: 'yellow',
+        borderRadius: 45,
+        width: '90px',
+        height: '90px',
+        top: 20,
+        left: 20,
+        fontSize: 70,
+        fontWeight: 900,
+        background: 'orange',
         textAlign: 'center',
         color: '#FFFFFF',
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
-}));
 
-export default function NavigationBar() {
-    const classes = useStyles();
+    textA: {
+        position: 'relative',
+        top: 30,
+        fontSize: 150,
+        fontWeight: 900,
+    },
 
-    return (
-        <React.Fragment>
-            <div className={classes.root}>
-                    <Paper>Q: 森一平は？</Paper>
-                    <div className={classes.subAlign}>
-                        <Paper className={classes.choiceA}>
-                            <Paper>
-                                <Typography variant="h4" align="center" className={classes.iconA}>A</Typography>
-                                <Typography variant="h4" align="center">2回</Typography>
-                            </Paper>
-                        </Paper>
+    textB: {
+        position: 'relative',
+        top: 30,
+        fontSize: 150,
+        fontWeight: 900,
+    },
 
-                        <Paper className={classes.choiceB}>
-                            <Paper>
-                                <Typography variant="h4" align="center" className={classes.iconB}>B</Typography>
-                                <Typography variant="h4" align="center">3回</Typography>
-                            </Paper>
-                        </Paper>
+    textC: {
+        position: 'relative',
+        top: 30,
+        fontSize: 150,
+        fontWeight: 900,
+    },
 
-                        <Paper className={classes.choiceC}>
-                            <Paper>
-                                <Typography variant="h4" align="center" className={classes.iconC}>C</Typography>
-                                <Typography variant="h4" align="center">4回</Typography>
-                            </Paper>
-                        </Paper>
+    textD: {
+        position: 'relative',
+        top: 30,
+        fontSize: 150,
+        fontWeight: 900,
+    },
 
-                        <Paper className={classes.choiceD}>
-                            <Paper>
-                                <Typography variant="h4" align="center" className={classes.iconD}>D</Typography>
-                                <Typography variant="h4" align="center">5回</Typography>
-                            </Paper>
-                        </Paper>
-                    </div>
-            </div>
-        </React.Fragment>
-    )
+    answerA: {
+
+    },
+
+    answerB: {
+
+    },
+
+    answerC: {
+
+    },
+
+    answerD: {
+
+    },
+
+    ans_textA: {
+        position: 'relative',
+        fontSize: 150,
+        fontWeight: 900,
+    },
+
+    ans_textB: {
+        position: 'relative',
+        fontSize: 150,
+        fontWeight: 900,
+    },
+
+    ans_textC: {
+        position: 'relative',
+        fontSize: 150,
+        fontWeight: 900,
+    },
+
+    ans_textD: {
+        position: 'relative',
+        fontSize: 150,
+        fontWeight: 900,
+    },
+});
+
+class QuizWindow extends Component {
+    async componentDidMount() {
+        await this.props.readWaitState()
+        await this.props.quizSet()
+    }
+
+    render() {
+        /* TODO: ユーザの回答状況を集計して画面に表示する */
+
+        const { classes } = this.props;
+
+        console.log(this.props.events)
+        var i = ""
+
+        if(this.props.events.quiz !== undefined) {
+            console.log(this.props.events.quiz.quiz_id)
+            console.log(this.props.events.quiz.answer)
+            i = this.props.events[this.props.events.quiz.quiz_id] // 現在入っているクイズの問題を見ている
+        }
+
+        return (
+            <React.Fragment>
+                <div className={classes.root}>
+                    {this.props.events.wait === false && this.props.events[this.props.events.quiz.quiz_id] !== undefined ? (
+                        <div>
+                            {/* 問題文を表示する欄 */}
+                            <div>
+                                <Paper className={classes.question_bg}>
+                                    <Typography variant="h2" align="center" className={classes.question}>Q: {i.question}</Typography>
+                                </Paper>
+                            </div>
+
+                            {/* 選択肢を表示する欄 */}
+                            <div className={classes.subAlign}>
+                                <Grid container spacing={6}>
+                                    <Grid item xs={6}>
+                                        {/* this.props.events.quiz.answerにゲームマスターが登録した回答が入ってるよ。 */}
+                                        {i.qtype !== "image" ? (
+                                            <Paper className={classes.choiceA}>
+                                                <Typography variant="h4" align="center" className={classes.iconA}>A</Typography>
+                                                <Typography variant="h4" align="center" className={classes.textA}>{i.choice1}</Typography>
+                                            </Paper>
+                                        ) : (
+                                            <Paper className={classes.choiceA}>
+                                                <Typography variant="h4" align="center" className={classes.iconA}>A</Typography>
+                                                <img src={i.choice1} alt="choice" width="500px"></img>
+                                            </Paper>
+                                        )}
+                                    </Grid>
+                                    
+                                    <Grid item xs={6}>
+                                        {i.qtype !== "image" ? (
+                                            <Paper className={classes.choiceB}>
+                                                <Typography variant="h4" align="center" className={classes.iconB}>B</Typography>
+                                                <Typography variant="h4" align="center" className={classes.textB}>{i.choice2}</Typography>
+                                            </Paper>
+                                        ) : (
+                                            <Paper className={classes.choiceB}>
+                                                <Typography variant="h4" align="center" className={classes.iconB}>B</Typography>
+                                                <img src={i.choice2} alt="choice" width="500px"></img>
+                                            </Paper>
+                                        )}
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container spacing={6}>
+                                    <Grid item xs={6}>
+                                        {i.qtype !== "image" ? (
+                                            <Paper className={classes.choiceC}>
+                                                <Typography variant="h4" align="center" className={classes.iconC}>C</Typography>
+                                                <Typography variant="h4" align="center" className={classes.textC}>{i.choice3}</Typography>
+                                            </Paper>
+                                        ) : (
+                                            <Paper className={classes.choiceC}>
+                                                <Typography variant="h4" align="center" className={classes.iconC}>C</Typography>
+                                                <img src={i.choice3} alt="choice" width="500px"></img>
+                                            </Paper>
+                                        )}
+                                    </Grid>
+
+                                    <Grid item xs={6}>
+                                        {i.qtype !== "image" ? (
+                                            <Paper className={classes.choiceD}>
+                                                <Typography variant="h4" align="center" className={classes.iconD}>D</Typography>
+                                                <Typography variant="h4" align="center" className={classes.textD}>{i.choice4}</Typography>
+                                            </Paper>
+                                        ) : (
+                                            <Paper className={classes.choiceD}>
+                                                <Typography variant="h4" align="center" className={classes.iconD}>D</Typography>
+                                                <img src={i.choice4} alt="choice" width="500px"></img>
+                                            </Paper>
+                                        )}
+                                    </Grid>
+                                </Grid>
+                            </div>
+
+                            {this.props.events.quiz.check !== false ? (
+                                <div className={classes.ans_subAlign}>
+                                    <Grid container spacing={6}>
+                                        <Grid item xs={3}>
+
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Paper className={classes.answerA}>
+                                                <Typography variant="h4" align="center" className={classes.ans_textA}>21</Typography>
+                                            </Paper>
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Paper className={classes.answerB}>
+                                                <Typography variant="h4" align="center" className={classes.ans_textB}>2</Typography>
+                                            </Paper>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={6} style={{marginTop: 300}}>
+                                        <Grid item xs={3}>
+
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Paper className={classes.answerC}>
+                                                <Typography variant="h4" align="center" className={classes.ans_textC}>4</Typography>
+                                            </Paper>
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            
+                                        </Grid>
+
+                                        <Grid item xs={3}>
+                                            <Paper className={classes.answerC}>
+                                                <Typography variant="h4" align="center" className={classes.ans_textC}>4</Typography>
+                                            </Paper>
+                                        </Grid>
+                                    </Grid>
+                                </div>
+                            ):(
+                                <div></div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className={classes.wait_bg}>
+                            <p>次の問題までお待ち下さい</p>
+                        </div>
+                    )}
+                </div>
+            </React.Fragment>
+        )
+    }
 }
+
+const mapStateToProps = (state) => ({ events: state.events })
+const mapDispatchToProps = ({ readWaitState, readQuizContent, quizCheckEvents, quizCollectEvents, quizSet })
+
+export default compose(
+    withStyles(styles),
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+  ))(QuizWindow)

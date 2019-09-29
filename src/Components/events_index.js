@@ -31,17 +31,43 @@ class EventsIndex extends Component {
     console.log(this.props.events)
     return _.map(this.props.events, event => (
       <TableRow key={event.id}>
-        <TableCell>{event.id}</TableCell>
+        <TableCell>
+          {event.id}
+        </TableCell>
+
         <TableCell>
           <Link to={`/events/${event.id}`}>
             {event.question}
           </Link>
         </TableCell>
-        <TableCell>{event.answer}</TableCell>
-        <TableCell>{event.choice1}</TableCell>
-        <TableCell>{event.choice2}</TableCell>
-        <TableCell>{event.choice3}</TableCell>
-        <TableCell>{event.choice4}</TableCell>
+
+        <TableCell>
+          {event.answer}
+        </TableCell>
+
+        {event.qtype === "text" ? (
+          <TableCell>{event.choice1}</TableCell>
+        ) : (
+          <TableCell><img src={event.choice1} alt="choice1" width="50px"></img></TableCell>
+        )}
+
+        {event.qtype === "text" ? (
+          <TableCell>{event.choice2}</TableCell>
+        ) : (
+          <TableCell><img src={event.choice2} alt="choice2" width="50px"></img></TableCell>
+        )}
+
+        {event.qtype === "text" ? (
+          <TableCell>{event.choice3}</TableCell>
+        ) : (
+          <TableCell><img src={event.choice3} alt="choice3" width="50px"></img></TableCell>
+        )}
+
+        {event.qtype === "text" ? (
+          <TableCell>{event.choice4}</TableCell>
+        ) : (
+          <TableCell><img src={event.choice4} alt="choice4" width="50px"></img></TableCell>
+        )}
       </TableRow>
     ))
   }

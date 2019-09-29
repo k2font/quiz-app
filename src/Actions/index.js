@@ -4,28 +4,7 @@
 
 // アクションを返す関数をActionCreatorと呼ぶ
 
-import ENV from '../env.json';
-
-// Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from "firebase/app";
-
-// Add the Firebase products that you want to use
-import "firebase/auth";
-import "firebase/firestore";
-
-const firebaseConfig = {
-    apiKey: ENV.FIREBASE_API_KEY,
-    authDomain: ENV.FIREBASE_AUTH_DOMAIN,
-    databaseURL: ENV.FIREBASE_DB_URL,
-    projectId: ENV.FIREBASE_PRJ_ID,
-    storageBucket: ENV.FIREBASE_STORAGE,
-    messagingSenderId: ENV.FIREBASE_SENDER_ID,
-};
-firebase.initializeApp(firebaseConfig);
-
-export const fba = firebase.auth()
-
-var db = firebase.firestore();
+import { db, storage, firebase } from '../Firebase';
 
 export const READ_EVENTS = 'READ_EVENTS'
 export const READ_EVENT = 'READ_EVENT'
@@ -35,8 +14,8 @@ export const PUT_EVENT = 'PUT_EVENT'
 
 export const QUIZ_EVENT = 'QUIZ_EVENTS'
 export const QUIZ_END_EVENT = 'QUIZ_END_EVENTS'
-export const QUIZ_CHECK_EVENT = 'QUIZ_CHECK_EVENTS'
-export const QUIZ_COLLECT_EVENT = 'QUIZ_COLLECT_EVENTS'
+export const QUIZ_CHECK_EVENT = 'QUIZ_CHECK_EVENT'
+export const QUIZ_COLLECT_EVENT = 'QUIZ_COLLECT_EVENT'
 export const QUIZ_WAIT_EVENT = 'QUIZ_WAIT_EVENTS'
 export const RANKING_EVENT = 'RANKING_EVENT'
 
@@ -44,8 +23,10 @@ export const LOGIN = 'LOGIN'
 
 export const WAIT_STATE = 'WAIT_STATE'
 export const QID_STATE = 'QID_STATE'
+export const QUIZ_CONTENT = 'QUIZ_CONTENT'
 
 export const QUIZ_SET = 'QUIZ_SET'
+export const CREATE_EVENT_IMAGE = 'CREATE_EVENT_IMAGE'
 
 
 /* ================ */
@@ -89,6 +70,21 @@ export const getRedirectResult = () => dispatch => {
 }
 
 /* ================ */
+/*  クイズウインドウ   */
+/* ================ */
+
+// 回答者キーパッド側がwaitの状態をリアルタイムに取得するためのActionCreator
+export const readQuizContent = (qid) => dispatch => {
+    var docRef = db.collection("quiestion").doc(qid);
+
+    docRef.onSnapshot(function(doc) {
+        var response = doc.data()
+        const quiz = response
+        dispatch({ type: QUIZ_CONTENT, quiz })
+    });
+}
+
+/* ================ */
 /*   回答者          */
 /* ================ */
 
@@ -99,13 +95,13 @@ export const readWaitState = () => dispatch => {
 
     docRef.onSnapshot(function(doc) {
         var response = doc.data()
-        const qid = response.quiz_id
-        dispatch({ type: QID_STATE, qid })
+        const quiz = response
+        console.log(quiz)
+        dispatch({ type: QID_STATE, quiz })
     });
 
     docRef_wait.onSnapshot(function(doc) {
         var response = doc.data()
-        console.log(response)
         const wait = response.wait
         dispatch({ type: WAIT_STATE, wait })
     });
@@ -212,11 +208,79 @@ export const quizCheckEvents = (id) => dispatch => {
 }
 
 // クイズ表示画面に正解をハイライトするActionCreator
-export const quizCollectEvents = (id) => dispatch => {
+export const quizCollectEvents = () => dispatch => {
     var docRef = db.collection("state").doc("quiz-state");
 
     docRef.update({
         collect: true,
+    }).then(function() {
+        console.log("The collect answer is ...");
+        const collect = true
+        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
+// クイズ表示画面に正解をハイライトするActionCreator
+export const quizCollectEventsA = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+
+    docRef.update({
+        collect: true,
+        answer: "A",
+    }).then(function() {
+        console.log("The collect answer is ...");
+        const collect = true
+        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
+// クイズ表示画面に正解をハイライトするActionCreator
+export const quizCollectEventsB = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+
+    docRef.update({
+        collect: true,
+        answer: "B",
+    }).then(function() {
+        console.log("The collect answer is ...");
+        const collect = true
+        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
+// クイズ表示画面に正解をハイライトするActionCreator
+export const quizCollectEventsC = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+
+    docRef.update({
+        collect: true,
+        answer: "C",
+    }).then(function() {
+        console.log("The collect answer is ...");
+        const collect = true
+        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
+// クイズ表示画面に正解をハイライトするActionCreator
+export const quizCollectEventsD = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+
+    docRef.update({
+        collect: true,
+        answer: "D",
     }).then(function() {
         console.log("The collect answer is ...");
         const collect = true
@@ -299,6 +363,26 @@ export const postEvent = (values) => dispatch => {
         choice3: values.choice3,
         choice4: values.choice4,
         question: values.question,
+        qtype: "text",
+    })
+    .then(function(docRef) {
+        const response = docRef.id;
+        console.log("document id is : ", response);
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
+export const postEventImage = (values) => dispatch => {
+    db.collection("question").add({
+        answer: values.answer,
+        choice1: values.choice1,
+        choice2: values.choice2,
+        choice3: values.choice3,
+        choice4: values.choice4,
+        question: values.question,
+        qtype: "image",
     })
     .then(function(docRef) {
         const response = docRef.id;

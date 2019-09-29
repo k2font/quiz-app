@@ -6,12 +6,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Fab from '@material-ui/core/Fab';
-import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/styles';
 import { compose } from 'redux'
-
-import App from './App'
 
 import {
     LogIn,
@@ -120,7 +117,8 @@ class Login extends Component {
     async onAnswerClick(e, _answer) {
         if(this.state.answer === null) {
             var _uid = this.props.events.uid
-            var _qid = this.props.events.qid
+            var _qid = this.props.events.quiz
+            console.log(this.props.events)
             await this.props.sendAnswer(_uid, _qid, _answer)
 
             this.setState({ answer: _answer })
@@ -159,7 +157,7 @@ class Login extends Component {
                             <div>
                                 <p className="App-intro"> UID: {this.props.events.uid}</p>
                                 <p className="App-intro"> ニックネーム: {this.props.events.wait}</p>
-                                <p className="App-intro"> 現在の問題: {this.props.events.qid}</p>
+                                <p className="App-intro"> 現在の問題: {this.props.events.quiz.quiz_id}</p>
 
                                 <div className={classes.root}>
                                     {/* <h1>Your Answer: { this.state.answer }</h1> */}
