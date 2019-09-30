@@ -16,8 +16,10 @@ import {
     authStateChanged,
     getRedirectResult,
     readWaitState,
+    readPlayerName,
     sendAnswer,
 } from '../Actions'
+import { testNameToKey } from 'jest-snapshot/build/utils';
 
 const styles = (theme) => ({
     root: {
@@ -40,7 +42,7 @@ const styles = (theme) => ({
 
     answerA: {
         background: '#1e90ff',
-        fontSize: 70,
+        fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
         color: 'white',
@@ -51,7 +53,7 @@ const styles = (theme) => ({
 
     answerB: {
         background: '#dc143c',
-        fontSize: 70,
+        fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
         color: 'white',
@@ -62,7 +64,7 @@ const styles = (theme) => ({
 
     answerC: {
         background: '#008000',
-        fontSize: 70,
+        fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
         color: 'white',
@@ -73,7 +75,7 @@ const styles = (theme) => ({
 
     answerD: {
         background: '#ffd700',
-        fontSize: 70,
+        fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
         color: 'white',
@@ -92,17 +94,30 @@ class Login extends Component {
     }
 
     state = {
-        user: null,
-        answer: null
+        uid: null,
+        answer: null,
+        dropout: false,
     }
 
-    // TODO: wait-stateを読んでwaitの状態を確認する
-    async componentDidMount() {
-        console.log("authStateChanged!")
-        await this.props.authStateChanged()
-        await this.props.readWaitState()
+    // 正解、不正解ラベルはユーザ端末側で管理すべき。
+    // ボタンを押した時点でthis.state.answerに回答ラベルを格納。this.props.events.collectがtrueになった時点でthis.props.events.answerと値を照合。
+    // 不正解ならthis.state.dropoutをtrueにする。以降、gamemasterがピリオドリセットを行うまではずっとtrue。
+    // this.state.dropoutがtrueの場合はボタンを描画しない。
 
-        console.log(this.state.answer)
+    componentDidMount() {
+        this.props.authStateChanged()
+        this.props.readWaitState()
+        // ニックネームをreadPlayerNameを用いて取得してくる
+        // QuizWindow同様動かない。これを正常動作させるにはどうすればいい？
+        // これを解決することはめちゃくちゃ重要。Loginウインドウにおいては「参加登録」ボタンを非表示にしなくてはならないため。
+        // usersコレクションを参照するためにuidをreadPlayerNameに渡さないといけない。
+        // renderが終わったタイミングでstateに値を入れる。次回render時にその値を読むことで解決するのでは?
+        /*
+        if(this.props.events !== undefined) {
+            this.props.readPlayerName(this.props.events.wait)
+        } */
+
+        console.log(this.state)
     }
 
     async onLogInClick() {
@@ -111,13 +126,13 @@ class Login extends Component {
 
     async onAttendClick() {
         // TODO: ユーザのニックネームを登録するActionを作成する
-        console.log("ニックネームを作成してください")
+        this.props.history.push('/addname')
     }
 
     async onAnswerClick(e, _answer) {
         if(this.state.answer === null) {
             var _uid = this.props.events.uid
-            var _qid = this.props.events.quiz
+            var _qid = this.props.events.quiz.quiz_id
             console.log(this.props.events)
             await this.props.sendAnswer(_uid, _qid, _answer)
 
@@ -127,6 +142,14 @@ class Login extends Component {
 
     render() {
         const { classes } = this.props;
+        console.log(this.props.events)
+
+        if(this.props.events.quiz) {
+            if(this.props.events.quiz.collect === true && this.state.answer !== this.props.events.quiz.answer) {
+                this.state.dropout = true
+            }
+        }
+
         return (
             <React.Fragment>
                 <CssBaseline />
@@ -138,27 +161,11 @@ class Login extends Component {
                 <Toolbar />
                 <div className="App">
 
-                {/* TODO: ニックネームを入力してもらう */}
-                {/* TODO: ニックネームを表示する */}
-                {/* TODO: 問題が終わったらすべてのstateを初期化する */}
-                {/* TODO: 回答時間の計算ができるようにする */}
-
                 {(() => {
                     if(this.props.events.uid) {
-                        if(this.props.events.wait === true) {
+                        if(this.props.events.wait === false && this.state.dropout === false) {
                             return(
                             <div>
-                                <p>次の問題までお待ち下さい</p>
-                                <Button variant="contained" color="secondary" className={classes.nickNameButton} onClick={this.onAttendClick}>ニックネーム登録</Button>
-                            </div>
-                            )
-                        } else if(this.props.events.wait === false) {
-                            return(
-                            <div>
-                                <p className="App-intro"> UID: {this.props.events.uid}</p>
-                                <p className="App-intro"> ニックネーム: {this.props.events.wait}</p>
-                                <p className="App-intro"> 現在の問題: {this.props.events.quiz.quiz_id}</p>
-
                                 <div className={classes.root}>
                                     {/* <h1>Your Answer: { this.state.answer }</h1> */}
 
@@ -192,23 +199,26 @@ class Login extends Component {
                                 </div>
                             </div>
                             )
+                        } else if(this.props.events.wait === false && this.state.dropout === true) {
+                            return(
+                            <div>
+                                <h2 style={{ textAlign: 'center', margin: 20, }}>脱落</h2>
+                                <h4 style={{ textAlign: 'center', }}>次のピリオドまでお待ち下さい</h4>
+                            </div>
+                            )
+                        } else {
+                            return(
+                            <div>
+                                <h2 style={{ textAlign: 'center', margin: 20, }}> ようこそ! </h2>
+                                <h4 style={{ textAlign: 'center', }}>次の問題までお待ち下さい</h4>
+                                <Button variant="contained" color="secondary" className={classes.nickNameButton} onClick={this.onAttendClick}>参加登録</Button>
+                            </div>
+                            )
                         }
                     } else {
                         return <Button variant="contained" color="primary" className={classes.nickNameButton} onClick={this.onLogInClick}>Google Login</Button>
                     }
                 })()}
-
-                {/*}
-                {this.props.events.uid ? (
-                    <div>
-                        <p className="App-intro"> UID: {this.props.events.uid}</p>
-                        <p className="App-intro"> ニックネーム: {this.props.events.wait}</p>
-                        <App />
-                        <Button variant="contained" color="secondary" style={{margin: 10, marginTop: 30}} onClick={this.onAttendClick}>ニックネーム登録</Button>
-                    </div>
-                ) : (
-                    <Button onClick={this.onLogInClick}>Google Login</Button>
-                )} */}
                 </div>
             </React.Fragment>
         )
@@ -216,7 +226,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = (state) => ({ events: state.events })
-const mapDispatchToProps = ({ LogIn, LogOut, getRedirectResult, authStateChanged, readWaitState, sendAnswer })
+const mapDispatchToProps = ({ LogIn, LogOut, getRedirectResult, authStateChanged, readWaitState, sendAnswer, readPlayerName })
 
 export default compose(
     withStyles(styles),

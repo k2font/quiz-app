@@ -15,6 +15,7 @@ import {
     quizCheckEvents,
     quizCollectEvents,
     quizSet,
+    countAnswer,
 } from '../Actions'
 
 import foo from '../img/bgimg.jpg'
@@ -254,11 +255,9 @@ class QuizWindow extends Component {
 
     render() {
         /* TODO: ユーザの回答状況を集計して画面に表示する */
-
         const { classes } = this.props;
-
-        console.log(this.props.events)
         var i = ""
+        console.log(this.props.events)
 
         if(this.props.events.quiz !== undefined) {
             console.log(this.props.events.quiz.quiz_id)
@@ -351,7 +350,7 @@ class QuizWindow extends Component {
 
                                         <Grid item xs={3}>
                                             <Paper className={classes.answerA}>
-                                                <Typography variant="h4" align="center" className={classes.ans_textA}>21</Typography>
+                                                <Typography variant="h4" align="center" className={classes.ans_textA}>{this.props.events.answers.A}</Typography>
                                             </Paper>
                                         </Grid>
 
@@ -361,7 +360,7 @@ class QuizWindow extends Component {
 
                                         <Grid item xs={3}>
                                             <Paper className={classes.answerB}>
-                                                <Typography variant="h4" align="center" className={classes.ans_textB}>2</Typography>
+                                                <Typography variant="h4" align="center" className={classes.ans_textB}>{this.props.events.answers.B}</Typography>
                                             </Paper>
                                         </Grid>
                                     </Grid>
@@ -373,7 +372,7 @@ class QuizWindow extends Component {
 
                                         <Grid item xs={3}>
                                             <Paper className={classes.answerC}>
-                                                <Typography variant="h4" align="center" className={classes.ans_textC}>4</Typography>
+                                                <Typography variant="h4" align="center" className={classes.ans_textC}>{this.props.events.answers.C}</Typography>
                                             </Paper>
                                         </Grid>
 
@@ -382,8 +381,8 @@ class QuizWindow extends Component {
                                         </Grid>
 
                                         <Grid item xs={3}>
-                                            <Paper className={classes.answerC}>
-                                                <Typography variant="h4" align="center" className={classes.ans_textC}>4</Typography>
+                                            <Paper className={classes.answerD}>
+                                                <Typography variant="h4" align="center" className={classes.ans_textC}>{this.props.events.answers.D}</Typography>
                                             </Paper>
                                         </Grid>
                                     </Grid>
@@ -404,7 +403,7 @@ class QuizWindow extends Component {
 }
 
 const mapStateToProps = (state) => ({ events: state.events })
-const mapDispatchToProps = ({ readWaitState, readQuizContent, quizCheckEvents, quizCollectEvents, quizSet })
+const mapDispatchToProps = ({ readWaitState, readQuizContent, quizCheckEvents, quizCollectEvents, quizSet, countAnswer })
 
 export default compose(
     withStyles(styles),

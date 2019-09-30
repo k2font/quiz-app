@@ -31,9 +31,6 @@ class EventsNew extends Component {
         }
     }
 
-    // フィールドを描画する
-    // 現在は使っていない関数
-
     renderTextField = ({
         input,
         label,

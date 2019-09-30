@@ -117,7 +117,7 @@ class GameMaster extends Component {
         })
     }
 
-    // 問題番号がかかれたButtonを描画する関数
+    // 問題文がかかれたButtonを描画する関数
     renderEvents() {
         console.log(this.props.events)
         if(this.props.events !== undefined) {
@@ -133,6 +133,8 @@ class GameMaster extends Component {
                     {event.question}
                 </Button>
             ))
+        } else {
+            return <div></div>
         }
     }
 
@@ -187,6 +189,12 @@ class GameMaster extends Component {
 
                     <Button variant="contained" color="secondary" style={{margin: 10}} onClick={this.onGoNextClick}>
                         次の問題へ(問題待機)
+                    </Button>
+
+                    <h3>ピリオドリセット</h3>
+
+                    <Button variant="contained" color="secondary" style={{margin: 10}} onClick={this.onGoNextPeriod}>
+                        次のピリオドへ
                     </Button>
                 </div>
             </React.Fragment>

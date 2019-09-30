@@ -19,11 +19,16 @@ export const QUIZ_COLLECT_EVENT = 'QUIZ_COLLECT_EVENT'
 export const QUIZ_WAIT_EVENT = 'QUIZ_WAIT_EVENTS'
 export const RANKING_EVENT = 'RANKING_EVENT'
 
+export const COUNT_EVENT = 'COUNT_EVENT'
+export const ANSWER_RESULT = 'ANSWER_RESULT'
+export const PLAYER_STATUS = 'PLAYER_STATUS'
+
 export const LOGIN = 'LOGIN'
 
 export const WAIT_STATE = 'WAIT_STATE'
 export const QID_STATE = 'QID_STATE'
 export const QUIZ_CONTENT = 'QUIZ_CONTENT'
+export const ANSWERS_STATE = 'ANSWERS_STATE'
 
 export const QUIZ_SET = 'QUIZ_SET'
 export const CREATE_EVENT_IMAGE = 'CREATE_EVENT_IMAGE'
@@ -84,14 +89,37 @@ export const readQuizContent = (qid) => dispatch => {
     });
 }
 
+// 回答数を計算するActionCreator
+export const countAnswer = (qid) => dispatch => {
+    console.log("countAnsewr")
+    db.collection(qid).get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            console.log(doc.id, " => ", doc.data());
+        });
+        dispatch({ type: ANSWER_RESULT,  })
+    });
+}
+
 /* ================ */
 /*   回答者          */
 /* ================ */
+
+export const postPlayerName = (value, uid) => dispatch => {
+    var docRef = db.collection("users").doc(uid);
+
+    docRef.set({
+        nickname: value.nickname,
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
 
 // 回答者キーパッド側がwaitの状態をリアルタイムに取得するためのActionCreator
 export const readWaitState = () => dispatch => {
     var docRef = db.collection("state").doc("quiz-state");
     var docRef_wait = db.collection("state").doc("wait-state");
+    var docRef_ans = db.collection("state").doc("answer-state");
 
     docRef.onSnapshot(function(doc) {
         var response = doc.data()
@@ -105,6 +133,23 @@ export const readWaitState = () => dispatch => {
         const wait = response.wait
         dispatch({ type: WAIT_STATE, wait })
     });
+
+    docRef_ans.onSnapshot(function(doc) {
+        var response = doc.data()
+        const answers = response.answers
+        dispatch({ type: ANSWERS_STATE, answers })
+    });
+}
+
+// 回答者キーパッド側がwaitの状態をリアルタイムに取得するためのActionCreator
+export const readPlayerName = (uid) => dispatch => {
+    var docRef = db.collection("users").doc(uid);
+    console.log(uid)
+
+    docRef.onSnapshot(function(doc) {
+        var response = doc.data()
+        dispatch({ type: PLAYER_STATUS, response })
+    });
 }
 
 // firestoreにユーザごとの回答を送信するActionCreator
@@ -113,12 +158,11 @@ export const readWaitState = () => dispatch => {
 // answer: そのユーザが選択した回答
 // TODO: 回答時間をセットできるようにせよ
 export const sendAnswer = (uid, qid, answer) => dispatch => {
-    var docRef = db.collection(qid).doc(uid);
-    console.log(answer)
+    var docRef = db.collection(qid).doc(answer)
 
     docRef.set({
-        answer: answer,
-    }).then(function() {
+        answer_user: firebase.firestore.FieldValue.arrayUnion(uid),
+    }, {merge: true}).then(function() {
         console.log("I set the user " + uid + "'s answer! This user's answer is " + answer);
         // reducerに送信する値はいらない
     })
@@ -181,6 +225,7 @@ export const quizEndEvents = (id) => dispatch => {
 
     docRef.update({
         readygo: false,
+        calc: true,
     }).then(function() {
         console.log("Quiz Finish!");
         const readygo = false
@@ -197,6 +242,7 @@ export const quizCheckEvents = (id) => dispatch => {
 
     docRef.update({
         check: true,
+        calc: false,
     }).then(function() {
         console.log("Answer Check!");
         const check = true
@@ -321,6 +367,7 @@ export const waitQuiz = (id) => dispatch => {
         ranking: false,
         check: false,
         collect: false,
+        calc: false,
     }).then(function() {
         console.log("Wait!");
         const wait = true
