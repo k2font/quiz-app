@@ -43,8 +43,9 @@ class TopPage extends Component {
                         問題表示画面
                     </Button>
                         
-                    <Button variant="contained" color="primary" style={{margin: 10}} disabled={true} onClick={() => {
+                    <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {
                         this.setState({ gonext: false })
+                        this.props.history.push('/ranking')
                     }}>
                         ランキング画面
                     </Button>

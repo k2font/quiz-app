@@ -4,7 +4,7 @@
 
 // アクションを返す関数をActionCreatorと呼ぶ
 
-import { db, storage, firebase } from '../Firebase';
+import { db, firebase } from '../Firebase';
 
 export const READ_EVENTS = 'READ_EVENTS'
 export const READ_EVENT = 'READ_EVENT'
@@ -18,6 +18,7 @@ export const QUIZ_CHECK_EVENT = 'QUIZ_CHECK_EVENT'
 export const QUIZ_COLLECT_EVENT = 'QUIZ_COLLECT_EVENT'
 export const QUIZ_WAIT_EVENT = 'QUIZ_WAIT_EVENTS'
 export const RANKING_EVENT = 'RANKING_EVENT'
+export const RANKING_READ = 'RANKING_READ'
 
 export const COUNT_EVENT = 'COUNT_EVENT'
 export const ANSWER_RESULT = 'ANSWER_RESULT'
@@ -97,6 +98,20 @@ export const countAnswer = (qid) => dispatch => {
             console.log(doc.id, " => ", doc.data());
         });
         dispatch({ type: ANSWER_RESULT,  })
+    });
+}
+
+/* =============== */
+/*   ランキング      */
+/* =============== */
+
+export const rankingRead = () => dispatch => {
+    var docRef = db.collection("state").doc("ranking-state");
+
+    docRef.onSnapshot(function(doc) {
+        var response = doc.data()
+        const ranking = response
+        dispatch({ type: RANKING_READ, ranking })
     });
 }
 
@@ -246,7 +261,7 @@ export const quizCheckEvents = (id) => dispatch => {
     }).then(function() {
         console.log("Answer Check!");
         const check = true
-        dispatch({ type: QUIZ_CHECK_EVENT, check })
+        // dispatch({ type: QUIZ_CHECK_EVENT, check })
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);
@@ -279,7 +294,7 @@ export const quizCollectEventsA = () => dispatch => {
     }).then(function() {
         console.log("The collect answer is ...");
         const collect = true
-        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+        // dispatch({ type: QUIZ_COLLECT_EVENT, collect })
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);
@@ -296,7 +311,7 @@ export const quizCollectEventsB = () => dispatch => {
     }).then(function() {
         console.log("The collect answer is ...");
         const collect = true
-        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+        // dispatch({ type: QUIZ_COLLECT_EVENT, collect })
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);
@@ -313,7 +328,7 @@ export const quizCollectEventsC = () => dispatch => {
     }).then(function() {
         console.log("The collect answer is ...");
         const collect = true
-        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+        // dispatch({ type: QUIZ_COLLECT_EVENT, collect })
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);
@@ -330,7 +345,7 @@ export const quizCollectEventsD = () => dispatch => {
     }).then(function() {
         console.log("The collect answer is ...");
         const collect = true
-        dispatch({ type: QUIZ_COLLECT_EVENT, collect })
+        // dispatch({ type: QUIZ_COLLECT_EVENT, collect })
     })
     .catch(function(error) {
         console.error("Error adding document: ", error);

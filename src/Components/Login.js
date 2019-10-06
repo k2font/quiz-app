@@ -19,7 +19,6 @@ import {
     readPlayerName,
     sendAnswer,
 } from '../Actions'
-import { testNameToKey } from 'jest-snapshot/build/utils';
 
 const styles = (theme) => ({
     root: {
@@ -41,7 +40,7 @@ const styles = (theme) => ({
     },
 
     answerA: {
-        background: '#1e90ff',
+        background: '#dc143c',
         fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
@@ -52,7 +51,7 @@ const styles = (theme) => ({
     },
 
     answerB: {
-        background: '#dc143c',
+        background: '#1e90ff',
         fontSize: 30,
         border: 0,
         boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
@@ -130,7 +129,7 @@ class Login extends Component {
     }
 
     async onAnswerClick(e, _answer) {
-        if(this.state.answer === null) {
+        if(this.state.answer === null && this.props.events.quiz.readygo === true) {
             var _uid = this.props.events.uid
             var _qid = this.props.events.quiz.quiz_id
             console.log(this.props.events)
@@ -148,6 +147,10 @@ class Login extends Component {
             if(this.props.events.quiz.collect === true && this.state.answer !== this.props.events.quiz.answer) {
                 this.state.dropout = true
             }
+
+            if(this.props.events.quiz.ranking === true) {
+                this.state.answer = null
+            }
         }
 
         return (
@@ -155,7 +158,7 @@ class Login extends Component {
                 <CssBaseline />
                     <AppBar className={classes.appBar}>
                         <Toolbar>
-                            <Typography variant="h5">森岡家結婚感謝祭 キーパッド</Typography>
+                            <Typography variant="h5">ぷんゆか結婚感謝祭</Typography>
                         </Toolbar>
                     </AppBar>
                 <Toolbar />
@@ -202,21 +205,45 @@ class Login extends Component {
                         } else if(this.props.events.wait === false && this.state.dropout === true) {
                             return(
                             <div>
-                                <h2 style={{ textAlign: 'center', margin: 20, }}>脱落</h2>
+                                <h2 style={{ textAlign: 'center', margin: 20, }}>予選落ち</h2>
                                 <h4 style={{ textAlign: 'center', }}>次のピリオドまでお待ち下さい</h4>
                             </div>
                             )
                         } else {
                             return(
                             <div>
-                                <h2 style={{ textAlign: 'center', margin: 20, }}> ようこそ! </h2>
+                                <h2 style={{ textAlign: 'center', margin: 20, }}> 準備完了! </h2>
                                 <h4 style={{ textAlign: 'center', }}>次の問題までお待ち下さい</h4>
-                                <Button variant="contained" color="secondary" className={classes.nickNameButton} onClick={this.onAttendClick}>参加登録</Button>
+                                <Button style={{
+                                    top: '50%',
+                                    left: '30%',
+                                }} variant="contained" color="secondary" className={classes.nickNameButton} onClick={this.onAttendClick}>参加名登録</Button>
                             </div>
                             )
                         }
+                    } else if(this.props.events.uid === undefined) {
+                        return (
+                            <div>
+                                <h3 style={{ textAlign: 'center', }}>まずはGoogleログインを行って<br />参加者登録をお願いします!</h3>
+                                <Button style={{
+                                    top: '50%',
+                                    left: '30%',
+                                }} variant="contained" color="primary" className={classes.nickNameButton} onClick={this.onLogInClick}>Google Login</Button>
+
+                                <p style={{ textAlign: 'left', margin: 20, marginTop: 40,}}>
+                                    あなたのGoogleアカウントに対して、次のことを行います。<br />
+                                    ・認証時に一意に払い出されるユーザIDを読み取る<br /><br />
+
+                                    <b>メールアドレスや登録名、支払情報など、Googleアカウントに紐付いている一切の個人情報の読み取りは行いません。</b>
+                                </p>
+                            </div>
+                        )
                     } else {
-                        return <Button variant="contained" color="primary" className={classes.nickNameButton} onClick={this.onLogInClick}>Google Login</Button>
+                        return (
+                            <div>
+                                読み込み中...
+                            </div>
+                        )
                     }
                 })()}
                 </div>

@@ -222,6 +222,52 @@ const styles = (theme) => ({
 
     },
 
+    blank_answer: {
+        margin: 20,
+        width: '100%',
+        height: '430px',
+    },
+
+    collectA: {
+        filter: 'alpha(opacity=50)',
+        opacity: '0.5',
+        margin: 20,
+        width: '100%',
+        height: '430px',
+        background: 'red',
+        textAlign:'center',
+    },
+
+    collectB: {
+        filter: 'alpha(opacity=50)',
+        opacity: '0.5',
+        margin: 20,
+        width: '100%',
+        height: '430px',
+        background: 'red',
+        textAlign:'center',
+    },
+
+    collectC: {
+        filter: 'alpha(opacity=50)',
+        opacity: '0.5',
+        margin: 20,
+        width: '100%',
+        height: '430px',
+        background: 'red',
+        textAlign:'center',
+    },
+
+    collectD: {
+        filter: 'alpha(opacity=50)',
+        opacity: '0.5',
+        margin: 20,
+        width: '100%',
+        height: '430px',
+        background: 'red',
+        textAlign:'center',
+    },
+
     ans_textA: {
         position: 'relative',
         fontSize: 150,
@@ -257,12 +303,14 @@ class QuizWindow extends Component {
         /* TODO: ユーザの回答状況を集計して画面に表示する */
         const { classes } = this.props;
         var i = ""
+        var quiz_answer = ""
         console.log(this.props.events)
 
         if(this.props.events.quiz !== undefined) {
             console.log(this.props.events.quiz.quiz_id)
             console.log(this.props.events.quiz.answer)
             i = this.props.events[this.props.events.quiz.quiz_id] // 現在入っているクイズの問題を見ている
+            quiz_answer = this.props.events.quiz.answer
         }
 
         return (
@@ -339,6 +387,59 @@ class QuizWindow extends Component {
                                         )}
                                     </Grid>
                                 </Grid>
+                            </div>
+
+                            {/* 回答が発表されたときに表示する欄 */}
+                            <div className={classes.subAlign}>
+                                { this.props.events.quiz.collect === true && quiz_answer === "A" ? (
+                                    <div>
+                                    <Grid container spacing={6}>
+                                        <Grid item xs={6}>
+                                                <div className={classes.collectA}></div>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={6}>
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+                                    </Grid>
+                                    </div>
+                                ) : (
+                                    <div className={classes.blank_answer}></div>
+                                )}
                             </div>
 
                             {this.props.events.quiz.check !== false ? (

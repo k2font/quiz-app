@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import NavigationBar from './NavigationBar'
 
 import _ from 'lodash'
+
+import { db, firebase } from '../Firebase';
 
 // Actionsを読み込む
 import {
@@ -25,6 +28,7 @@ import {
 class GameMaster extends Component {
     constructor(props) {
         super(props)
+        this.addNickName = this.addNickName.bind(this)
         this.onQuizStartClick = this.onQuizStartClick.bind(this)
         this.onQuizEndClick = this.onQuizEndClick.bind(this)
         this.onQuizCheckClick = this.onQuizCheckClick.bind(this)
@@ -45,6 +49,8 @@ class GameMaster extends Component {
         collect_check: false,
         ranking: false,
         gonext: false,
+        quiz_id: "",
+        nickname: "",
     }
 
     // [優先度低]値をReducerから取ってきて状態管理を実施する(画面を間違って更新してしまった場合の対策)
@@ -53,10 +59,17 @@ class GameMaster extends Component {
         this.props.quizSet()
     }
 
+    addNickName = () => {
+        this.setState({
+            message: "The button has been clicked!"
+        })
+    }
+
     async onQuizStartClick(e, qid) {
         console.log(qid)
         await this.props.quizEvents(qid)
         this.setState({ readygo: true })
+        this.setState({ quiz_id: qid.id })
     }
 
     async onQuizEndClick() {
@@ -81,24 +94,124 @@ class GameMaster extends Component {
         await this.props.quizCollectEventsA()
         this.setState({ collect_check: false })
         this.setState({ ranking: true })
+
+        // 最初に正解した人を画面に表示する処理
+        var docRef = db.collection(this.state.quiz_id).doc("A");
+        var response_answer_user = []
+        var nick = []
+    
+        await docRef.get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.answer_user[0])
+            response_answer_user.push(response.answer_user[0])
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.nickname)
+            var nickname = response.nickname
+            // なぜかsetStateできない...
+            nick.push(nickname)
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        this.setState({nickname: nick})
     }
 
     async onQuizCollectClickB() {
         await this.props.quizCollectEventsB()
         this.setState({ collect_check: false })
         this.setState({ ranking: true })
+
+        // 最初に正解した人を画面に表示する処理
+        var docRef = db.collection(this.state.quiz_id).doc("B");
+        var response_answer_user = []
+        var nick = []
+    
+        await docRef.get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.answer_user[0])
+            response_answer_user.push(response.answer_user[0])
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.nickname)
+            var nickname = response.nickname
+            // なぜかsetStateできない...
+            nick.push(nickname)
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        this.setState({nickname: nick})
     }
 
     async onQuizCollectClickC() {
         await this.props.quizCollectEventsC()
         this.setState({ collect_check: false })
         this.setState({ ranking: true })
+
+        // 最初に正解した人を画面に表示する処理
+        var docRef = db.collection(this.state.quiz_id).doc("C");
+        var response_answer_user = []
+        var nick = []
+    
+        await docRef.get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.answer_user[0])
+            response_answer_user.push(response.answer_user[0])
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.nickname)
+            var nickname = response.nickname
+            // なぜかsetStateできない...
+            nick.push(nickname)
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        this.setState({nickname: nick})
     }
 
     async onQuizCollectClickD() {
         await this.props.quizCollectEventsD()
         this.setState({ collect_check: false })
         this.setState({ ranking: true })
+
+        // 最初に正解した人を画面に表示する処理
+        var docRef = db.collection(this.state.quiz_id).doc("D");
+        var response_answer_user = []
+        var nick = []
+    
+        await docRef.get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.answer_user[0])
+            response_answer_user.push(response.answer_user[0])
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+            var response = doc.data()
+            console.log(response.nickname)
+            var nickname = response.nickname
+            // なぜかsetStateできない...
+            nick.push(nickname)
+        }).catch(function(error) {
+            console.log("Error getting cached document:", error);
+        });
+
+        this.setState({nickname: nick})
     }
 
     async onRankingClick() {
@@ -114,21 +227,27 @@ class GameMaster extends Component {
             collect_check: false,
             ranking: false,
             gonext: false,
+            quiz_id: "",
+            nickname: "",
         })
+    }
+
+    async onGoNextPeriod() {
+        
     }
 
     // 問題文がかかれたButtonを描画する関数
     renderEvents() {
-        console.log(this.props.events)
         if(this.props.events !== undefined) {
+            console.log(this.props.events)
             return _.map(this.props.events, (event, index) => (
                 <Button
-                    key={index}
+                    key={ index }
                     variant="contained"
                     color="primary"
-                    style={{margin: 10}}
-                    disabled={this.state.readygo || this.state.answer_check || this.state.collect_check || this.state.ranking}
-                    onClick={e => this.onQuizStartClick(e, event)}
+                    style={{ margin: 10 }}
+                    disabled={ this.state.readygo || this.state.answer_check || this.state.collect_check || this.state.ranking }
+                    onClick={ e => this.onQuizStartClick(e, event) }
                 >
                     {event.question}
                 </Button>
@@ -139,6 +258,7 @@ class GameMaster extends Component {
     }
 
     render() {
+        console.log(this.state.nickname)
         return (
             <React.Fragment>
                 
@@ -179,10 +299,12 @@ class GameMaster extends Component {
                         正解: D
                     </Button>
 
-                    <h3>ランキング</h3>
+                    <Typography variant="body1" align="left">この問題の最速正解者: {this.state.nickname}</Typography>
+
+                    <h3>後処理</h3>
 
                     <Button variant="contained" color="secondary" style={{margin: 10}} disabled={!this.state.ranking} onClick={this.onRankingClick}>
-                        ランキング表示開始
+                        正解者決定
                     </Button>
 
                     <h3>クイズ終了</h3>
@@ -191,10 +313,10 @@ class GameMaster extends Component {
                         次の問題へ(問題待機)
                     </Button>
 
-                    <h3>ピリオドリセット</h3>
+                    <h3 style={{marginTop: 100}}>ピリオドリセット/全員復活</h3>
 
                     <Button variant="contained" color="secondary" style={{margin: 10}} onClick={this.onGoNextPeriod}>
-                        次のピリオドへ
+                        全参加者復活
                     </Button>
                 </div>
             </React.Fragment>

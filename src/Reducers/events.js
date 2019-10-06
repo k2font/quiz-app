@@ -14,6 +14,7 @@ import {
     WAIT_STATE,
     QUIZ_SET,
     ANSWERS_STATE,
+    RANKING_READ,
 } from '../Actions'
 
 export default (events = {}, action) => {
@@ -50,6 +51,8 @@ export default (events = {}, action) => {
         case DELETE_EVENT:
             delete events[action.id]
             return {...events}
+        case RANKING_READ:
+            return {...events, "ranking": action.ranking}
         default:
             return events
     }

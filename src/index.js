@@ -18,7 +18,8 @@ import QuizWindow from './Components/QuizWindow';
 import GameMaster from './Components/GameMaster';
 import TopPage from './Components/TopPage';
 import Login from './Components/Login';
-import NickName from './Components/NickName'
+import NickName from './Components/NickName';
+import Ranking from './Components/Ranking';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -42,6 +43,7 @@ ReactDOM.render(
                 <Route exact path="/log_in" component={Login} />
                 <Route exact path="/" component={Login} />
                 <Route exact path="/addname" component={NickName} />
+                <Route exact path="/ranking" component={Ranking} />
             </Switch>
         </BrowserRouter>
     </Provider>,

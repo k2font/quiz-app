@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
 import { Link } from 'react-router-dom'
+import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Switch from '@material-ui/core/Switch';
+import { storage } from '../Firebase';
 
 import NavigationBar from './NavigationBar'
 
@@ -12,7 +18,82 @@ class EventsShow extends Component {
         super(props)
         this.onSubmit = this.onSubmit.bind(this)
         this.onDeleteClick = this.onDeleteClick.bind(this)
+        this.renderImageField = this.renderImageField.bind(this);
+        this.renderTextField = this.renderTextField.bind(this);
+        this.handleImageChange = this.handleImageChange.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+
+        this.state = {
+            image: null,
+            url: '',
+            progress: 0,
+            checkedA: false,
+        }
     }
+
+    renderTextField = ({
+        input,
+        label,
+        meta: { touched, error },
+        ...custom
+      }) => (
+            <div>
+                <TextField
+                    style={{
+                        width: 500,
+                        marginLeft: 30,
+                    }}
+                    margin="normal"
+                    label={label}
+                    {...input}
+                    {...custom}
+                />
+                {touched && error && <span>{error}</span>} {/* この書き方が不明 */}
+            </div>
+      )
+
+    renderImageField = ({
+        input,
+        label,
+      }) => (
+            <div>
+                <Input type="file" onChange={this.handleImageChange}/>
+                {/* <button onClick={this.handleUpload}>Upload</button> */}
+                <img src={this.state.url || 'http://via.placeholder.com/400x300'} alt="Uploaded images" height="150" width="200"/>
+            </div>
+      )
+
+    handleImageChange = e => {
+        if (e.target.files[0]) {
+            const image = e.target.files[0];
+            // this.setState(() => ({image}));
+
+            // {image} = this.state;
+            const uploadTask = storage.ref(`images/${image.name}`).put(image);
+            uploadTask.on('state_changed', 
+
+            (snapshot) => {
+                
+            }, 
+
+            (error) => {
+                // error function ....
+                console.log(error);
+            }, 
+
+            () => {
+                // complete function ....
+                storage.ref('images').child(image.name).getDownloadURL().then(url => {
+                    console.log(url);
+                    this.setState({url});
+                })
+            });
+        }
+    }
+
+    handleChange = name => event => {
+        this.setState({ ...this.state, [name]: event.target.checked });
+    };
 
     componentDidMount() {
       const { id } = this.props.match.params
@@ -31,6 +112,17 @@ class EventsShow extends Component {
                 {touched && error && <span>{error}</span>} {/* この書き方が不明 */}
             </div>
         )
+    }
+
+    async onSubmitText(values) {
+        await this.props.postEvent(values)
+        this.props.history.push('/events')
+    }
+
+    async onSubmitImage(values) {
+        console.log(values)
+        await this.props.postEventImage(values)
+        this.props.history.push('/events')
     }
 
     async onDeleteClick() {
@@ -54,35 +146,38 @@ class EventsShow extends Component {
         return (
             <React.Fragment>
                 <NavigationBar />
-                <form onSubmit={handleSubmit(this.onSubmit)}>
+                <form onSubmit={handleSubmit(this.onSubmit)} >
                     <div>
-                        <Field label="問題" name="question" type="text" component={this.renderField} />
+                        <Field label="問題" name="question" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <Field label="選択肢A" name="choice1" type="text" component={this.renderField} />
+                        <Field label="選択肢A" name="choice1" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <Field label="選択肢B" name="choice2" type="text" component={this.renderField} />
+                        <Field label="選択肢B" name="choice2" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <Field label="選択肢C" name="choice3" type="text" component={this.renderField} />
+                        <Field label="選択肢C" name="choice3" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <Field label="選択肢D" name="choice4" type="text" component={this.renderField} />
+                        <Field label="選択肢D" name="choice4" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <Field label="回答" name="answer" type="text" component={this.renderField} />
+                        <Field label="回答" name="answer" component={this.renderTextField} />
                     </div>
 
                     <div>
-                        <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
-                        <Link to="/events">Cancel</Link>
-                        <Link to="/events" onClick={this.onDeleteClick}>Delete</Link>
+                        <Button type="submit" value="Submit" disabled={pristine || submitting || invalid} variant="contained" color="primary" style={{margin: 10}} onClick={() => {}}>
+                            登録
+                        </Button>
+
+                        <Button color="primary" to="/events"><Link to="/events">Cancel</Link></Button>
+                        <Button color="secondary" to="/events" onClick={this.onDeleteClick}><Link to="/events">Delete</Link></Button>
                     </div>
                 </form>
             </React.Fragment>
