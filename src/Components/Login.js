@@ -152,7 +152,7 @@ class Login extends Component {
                 this.state.answer = null
             }
 
-            if(this.props.events.quiz.collect === true && this.state.answer !== this.props.events.quiz.answer) {
+            if(this.props.events.quiz.reset === true) {
                 this.state.dropout = false
             }
         }
