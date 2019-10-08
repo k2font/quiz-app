@@ -214,6 +214,7 @@ export const quizEvents = (qid) => dispatch => {
 
     docRef.update({
         readygo: true,
+        reset: false,
         quiz_id: qid.id,
     }).then(function() {
         console.log("quiz start!");
