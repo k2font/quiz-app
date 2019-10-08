@@ -31,8 +31,8 @@ class TopPage extends Component {
                         クイズ登録用画面
                     </Button>
 
-                    <Button variant="contained" color="primary" style={{margin: 10}} disabled={true} onClick={() => {
-                        //this.props.history.push('/')
+                    <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {
+                        this.props.history.push('/answers')
                     }}>
                         回答状況確認画面
                     </Button>
@@ -43,7 +43,7 @@ class TopPage extends Component {
                         問題表示画面
                     </Button>
                         
-                    <Button variant="contained" color="primary" style={{margin: 10}} onClick={() => {
+                    <Button variant="contained" color="primary" style={{margin: 10}} disabled={true} onClick={() => {
                         this.setState({ gonext: false })
                         this.props.history.push('/ranking')
                     }}>

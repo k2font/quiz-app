@@ -20,6 +20,7 @@ import TopPage from './Components/TopPage';
 import Login from './Components/Login';
 import NickName from './Components/NickName';
 import Ranking from './Components/Ranking';
+import Answers from './Components/Answers';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -44,6 +45,7 @@ ReactDOM.render(
                 <Route exact path="/" component={Login} />
                 <Route exact path="/addname" component={NickName} />
                 <Route exact path="/ranking" component={Ranking} />
+                <Route exact path="/answers" component={Answers} />
             </Switch>
         </BrowserRouter>
     </Provider>,
