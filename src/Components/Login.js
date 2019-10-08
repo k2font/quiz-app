@@ -151,6 +151,10 @@ class Login extends Component {
             if(this.props.events.quiz.ranking === true) {
                 this.state.answer = null
             }
+
+            if(this.props.events.quiz.collect === true && this.state.answer !== this.props.events.quiz.answer) {
+                this.state.dropout = false
+            }
         }
 
         return (

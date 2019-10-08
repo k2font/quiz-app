@@ -31,6 +31,8 @@ export const QID_STATE = 'QID_STATE'
 export const QUIZ_CONTENT = 'QUIZ_CONTENT'
 export const ANSWERS_STATE = 'ANSWERS_STATE'
 
+export const NEXT_PERIOD = 'NEXT_PERIOD'
+
 export const QUIZ_SET = 'QUIZ_SET'
 export const CREATE_EVENT_IMAGE = 'CREATE_EVENT_IMAGE'
 
@@ -403,6 +405,24 @@ export const waitQuiz = (id) => dispatch => {
         console.error("Error adding document: ", error);
     });
 }
+
+// 次のピリオドに行く際に、キーパッド側のすべてのstateを初期化するActionCreator
+// state/quiz-stateのresetのみtrueにする
+export const goNextPeriod = () => dispatch => {
+    var docRef = db.collection("state").doc("quiz-state");
+
+    docRef.update({
+        reset: true,
+    }).then(function() {
+        console.log("Ranking!");
+        const reset = true
+        dispatch({ type: NEXT_PERIOD, reset })
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
 
 /* ================ */
 /* クイズ一覧読み書き  */

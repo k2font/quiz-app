@@ -233,7 +233,7 @@ class GameMaster extends Component {
     }
 
     async onGoNextPeriod() {
-        
+        await this.props.goNextPeriod()
     }
 
     // 問題文がかかれたButtonを描画する関数
