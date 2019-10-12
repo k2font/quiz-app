@@ -479,8 +479,6 @@ export const postEventImage = (values) => dispatch => {
 export const getEvent = (id) => dispatch => {
     var docRef = db.collection("question").doc(id);
 
-    docRef.orderBy("name");
-
     docRef.get().then(function(doc) {
         var response = doc.data()
         response.id = doc.id
