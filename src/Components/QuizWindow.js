@@ -321,7 +321,7 @@ class QuizWindow extends Component {
                             {/* 問題文を表示する欄 */}
                             <div>
                                 <Paper className={classes.question_bg}>
-                                    <Typography variant="h2" align="center" className={classes.question}>Q: {i.question}</Typography>
+                                    <Typography variant="h2" align="center" className={classes.question}>{i.question}</Typography>
                                 </Paper>
                             </div>
 
@@ -338,7 +338,7 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceA}>
                                                 <Typography variant="h4" align="center" className={classes.iconA}>A</Typography>
-                                                <img src={i.choice1} alt="choice" width="500px"></img>
+                                                <img src={i.choice1} alt="choice" width="400px"></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -352,7 +352,7 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceB}>
                                                 <Typography variant="h4" align="center" className={classes.iconB}>B</Typography>
-                                                <img src={i.choice2} alt="choice" width="500px"></img>
+                                                <img src={i.choice2} alt="choice" width="400px"></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -368,7 +368,7 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceC}>
                                                 <Typography variant="h4" align="center" className={classes.iconC}>C</Typography>
-                                                <img src={i.choice3} alt="choice" width="500px"></img>
+                                                <img src={i.choice3} alt="choice" width="400px"></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -382,7 +382,7 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceD}>
                                                 <Typography variant="h4" align="center" className={classes.iconD}>D</Typography>
-                                                <img src={i.choice4} alt="choice" width="500px"></img>
+                                                <img src={i.choice4} alt="choice" width="400px"></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -438,7 +438,157 @@ class QuizWindow extends Component {
                                     </Grid>
                                     </div>
                                 ) : (
-                                    <div className={classes.blank_answer}></div>
+                                    <div></div>
+                                )}
+
+                                { this.props.events.quiz.collect === true && quiz_answer === "B" ? (
+                                    <div>
+                                    <Grid container spacing={6}>
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                                <div className={classes.collectA}></div>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={6}>
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+
+                                        <Grid item xs={6}>
+                                                <div style={{
+                                                    filter: 'alpha(opacity=50)',
+                                                    opacity: '0.5',
+                                                    margin: 20,
+                                                    width: '100%',
+                                                    height: '430px',
+                                                    background: 'gray',
+                                                    textAlign:'center',
+                                                }}></div>
+                                        </Grid>
+                                    </Grid>
+                                    </div>
+                                ) : (
+                                    <div></div>
+                                )}
+
+                                { this.props.events.quiz.collect === true && quiz_answer === "C" ? (
+                                    <div>
+                                        <Grid container spacing={6}>
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container spacing={6}>
+                                            <Grid item xs={6}>
+                                                    <div className={classes.collectC}></div>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+                                        </Grid>
+                                    </div>
+                                ) : (
+                                    <div></div>
+                                )}
+
+                                { this.props.events.quiz.collect === true && quiz_answer === "D" ? (
+                                    <div>
+                                        <Grid container spacing={6}>
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid container spacing={6}>
+                                            <Grid item xs={6}>
+                                                    <div style={{
+                                                        filter: 'alpha(opacity=50)',
+                                                        opacity: '0.5',
+                                                        margin: 20,
+                                                        width: '100%',
+                                                        height: '430px',
+                                                        background: 'gray',
+                                                        textAlign:'center',
+                                                    }}></div>
+                                            </Grid>
+
+                                            <Grid item xs={6}>
+                                                    <div className={classes.collectD}></div>
+                                            </Grid>
+                                        </Grid>
+                                    </div>
+                                ) : (
+                                    <div></div>
                                 )}
                             </div>
 

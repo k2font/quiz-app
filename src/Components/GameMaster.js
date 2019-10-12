@@ -23,6 +23,7 @@ import {
     quizCollectEventsB,
     quizCollectEventsC,
     quizCollectEventsD,
+    goNextPeriod,
 } from '../Actions'
 
 class GameMaster extends Component {
@@ -39,6 +40,7 @@ class GameMaster extends Component {
         this.onQuizCollectClickD = this.onQuizCollectClickD.bind(this)
         this.onRankingClick = this.onRankingClick.bind(this)
         this.onGoNextClick = this.onGoNextClick.bind(this)
+        this.onGoNextPeriod = this.onGoNextPeriod.bind(this)
     }
 
     /* TODO: 回答をFirestoreに登録するボタンの挙動を用意する */
@@ -108,15 +110,17 @@ class GameMaster extends Component {
             console.log("Error getting cached document:", error);
         });
 
-        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
-            var response = doc.data()
-            console.log(response.nickname)
-            var nickname = response.nickname
-            // なぜかsetStateできない...
-            nick.push(nickname)
-        }).catch(function(error) {
-            console.log("Error getting cached document:", error);
-        });
+        if(response_answer_user[0] !== undefined) {
+            await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+                var response = doc.data()
+                console.log(response.nickname)
+                var nickname = response.nickname
+                // なぜかsetStateできない...
+                nick.push(nickname)
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+        }
 
         this.setState({nickname: nick})
     }
@@ -139,15 +143,17 @@ class GameMaster extends Component {
             console.log("Error getting cached document:", error);
         });
 
-        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
-            var response = doc.data()
-            console.log(response.nickname)
-            var nickname = response.nickname
-            // なぜかsetStateできない...
-            nick.push(nickname)
-        }).catch(function(error) {
-            console.log("Error getting cached document:", error);
-        });
+        if(response_answer_user[0] !== undefined) {
+            await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+                var response = doc.data()
+                console.log(response.nickname)
+                var nickname = response.nickname
+                // なぜかsetStateできない...
+                nick.push(nickname)
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+        }
 
         this.setState({nickname: nick})
     }
@@ -170,15 +176,17 @@ class GameMaster extends Component {
             console.log("Error getting cached document:", error);
         });
 
-        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
-            var response = doc.data()
-            console.log(response.nickname)
-            var nickname = response.nickname
-            // なぜかsetStateできない...
-            nick.push(nickname)
-        }).catch(function(error) {
-            console.log("Error getting cached document:", error);
-        });
+        if(response_answer_user[0] !== undefined) {
+            await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+                var response = doc.data()
+                console.log(response.nickname)
+                var nickname = response.nickname
+                // なぜかsetStateできない...
+                nick.push(nickname)
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+        }
 
         this.setState({nickname: nick})
     }
@@ -201,15 +209,17 @@ class GameMaster extends Component {
             console.log("Error getting cached document:", error);
         });
 
-        await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
-            var response = doc.data()
-            console.log(response.nickname)
-            var nickname = response.nickname
-            // なぜかsetStateできない...
-            nick.push(nickname)
-        }).catch(function(error) {
-            console.log("Error getting cached document:", error);
-        });
+        if(response_answer_user[0] !== undefined) {
+            await db.collection("users").doc(response_answer_user[0]).get().then(function(doc) {
+                var response = doc.data()
+                console.log(response.nickname)
+                var nickname = response.nickname
+                // なぜかsetStateできない...
+                nick.push(nickname)
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+        }
 
         this.setState({nickname: nick})
     }
@@ -339,6 +349,7 @@ const mapDispatchToProps = (
         quizCollectEventsB,
         quizCollectEventsC,
         quizCollectEventsD,
+        goNextPeriod,
     }
 )
 
