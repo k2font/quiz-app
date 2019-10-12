@@ -195,7 +195,7 @@ export const sendAnswer = (uid, qid, answer) => dispatch => {
 
 // クイズ一覧を呼び出すActionCreator
 export const quizSet = () => dispatch => {
-    db.collection("question").onSnapshot(function(doc) {
+    db.collection("question").orderBy("question").onSnapshot(function(doc) {
         console.log(doc)
         doc.forEach((_doc) => {
             var response = _doc.data()
@@ -429,7 +429,7 @@ export const goNextPeriod = () => dispatch => {
 /* クイズ一覧読み書き  */
 /* ================ */
 export const readEvents = () => dispatch => {
-    db.collection("question").onSnapshot(function(doc) {
+    db.collection("question").orderBy("question").onSnapshot(function(doc) {
         doc.forEach((_doc) => {
             var response = _doc.data()
             response.id = _doc.id
@@ -478,6 +478,8 @@ export const postEventImage = (values) => dispatch => {
 
 export const getEvent = (id) => dispatch => {
     var docRef = db.collection("question").doc(id);
+
+    docRef.orderBy("name");
 
     docRef.get().then(function(doc) {
         var response = doc.data()

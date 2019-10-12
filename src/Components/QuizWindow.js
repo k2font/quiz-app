@@ -42,7 +42,7 @@ const styles = (theme) => ({
 
     ans_subAlign: {
         position: 'absolute',
-        top: 700,
+        top: 760,
         right: 0,
         bottom: 0,
         left: 0,
@@ -77,39 +77,39 @@ const styles = (theme) => ({
 
     question: {
         position: 'absolute',
-        margin: 20,
+        margin: 10,
         textSize: 2000,
         fontWeight: 900,
     },
 
     choiceA: {
-        margin: 20,
+        margin: 0,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'white',
         textAlign:'center',
     },
 
     choiceB: {
-        margin: 20,
+        margin: 0,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'white',
         textAlign:'center',
     },
 
     choiceC: {
-        margin: 20,
+        margin: 0,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'white',
         textAlign:'center',
     },
 
     choiceD: {
-        margin: 20,
+        margin: 0,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'white',
         textAlign:'center',
     },
@@ -207,33 +207,33 @@ const styles = (theme) => ({
     },
 
     answerA: {
-
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     answerB: {
-
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     answerC: {
-
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     answerD: {
-
+        boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     },
 
     blank_answer: {
-        margin: 20,
+        margin: 0,
         width: '100%',
-        height: '430px',
+        height: '470px',
     },
 
     collectA: {
         filter: 'alpha(opacity=50)',
         opacity: '0.5',
-        margin: 20,
+        marginTop: 10,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'red',
         textAlign:'center',
     },
@@ -241,9 +241,9 @@ const styles = (theme) => ({
     collectB: {
         filter: 'alpha(opacity=50)',
         opacity: '0.5',
-        margin: 20,
+        marginTop: 10,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'red',
         textAlign:'center',
     },
@@ -251,9 +251,9 @@ const styles = (theme) => ({
     collectC: {
         filter: 'alpha(opacity=50)',
         opacity: '0.5',
-        margin: 20,
+        marginTop: 10,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'red',
         textAlign:'center',
     },
@@ -261,9 +261,9 @@ const styles = (theme) => ({
     collectD: {
         filter: 'alpha(opacity=50)',
         opacity: '0.5',
-        margin: 20,
+        marginTop: 10,
         width: '100%',
-        height: '430px',
+        height: '470px',
         background: 'red',
         textAlign:'center',
     },
@@ -338,7 +338,15 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceA}>
                                                 <Typography variant="h4" align="center" className={classes.iconA}>A</Typography>
-                                                <img src={i.choice1} alt="choice" width="400px"></img>
+                                                <img src={i.choice1} alt="choice"
+                                                style={{
+                                                    width: "600px",
+                                                    position: 'absolute',
+                                                    top: 20,
+                                                    right: 500,
+                                                    bottom: 100,
+                                                    left: 150,
+                                                }}></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -352,7 +360,15 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceB}>
                                                 <Typography variant="h4" align="center" className={classes.iconB}>B</Typography>
-                                                <img src={i.choice2} alt="choice" width="400px"></img>
+                                                <img src={i.choice2} alt="choice"
+                                                style={{
+                                                    width: "600px",
+                                                    position: 'absolute',
+                                                    top: 20,
+                                                    right: 500,
+                                                    bottom: 100,
+                                                    left: 1030,
+                                                }}></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -368,7 +384,15 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceC}>
                                                 <Typography variant="h4" align="center" className={classes.iconC}>C</Typography>
-                                                <img src={i.choice3} alt="choice" width="400px"></img>
+                                                <img src={i.choice3} alt="choice"
+                                                style={{
+                                                    width: "600px",
+                                                    position: 'absolute',
+                                                    top: 520,
+                                                    right: 500,
+                                                    bottom: 100,
+                                                    left: 150,
+                                                }}></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -382,7 +406,15 @@ class QuizWindow extends Component {
                                         ) : (
                                             <Paper className={classes.choiceD}>
                                                 <Typography variant="h4" align="center" className={classes.iconD}>D</Typography>
-                                                <img src={i.choice4} alt="choice" width="400px"></img>
+                                                <img src={i.choice4} alt="choice"
+                                                style={{
+                                                    width: "600px",
+                                                    position: 'absolute',
+                                                    top: 520,
+                                                    right: 500,
+                                                    bottom: 100,
+                                                    left: 1030,
+                                                }}></img>
                                             </Paper>
                                         )}
                                     </Grid>
@@ -402,9 +434,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -416,9 +448,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -428,9 +460,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -448,9 +480,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -466,9 +498,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -478,9 +510,9 @@ class QuizWindow extends Component {
                                                 <div style={{
                                                     filter: 'alpha(opacity=50)',
                                                     opacity: '0.5',
-                                                    margin: 20,
+                                                    marginTop: 10,
                                                     width: '100%',
-                                                    height: '430px',
+                                                    height: '470px',
                                                     background: 'gray',
                                                     textAlign:'center',
                                                 }}></div>
@@ -498,9 +530,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
@@ -510,9 +542,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
@@ -528,9 +560,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
@@ -548,9 +580,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
@@ -560,9 +592,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
@@ -574,9 +606,9 @@ class QuizWindow extends Component {
                                                     <div style={{
                                                         filter: 'alpha(opacity=50)',
                                                         opacity: '0.5',
-                                                        margin: 20,
+                                                        marginTop: 10,
                                                         width: '100%',
-                                                        height: '430px',
+                                                        height: '470px',
                                                         background: 'gray',
                                                         textAlign:'center',
                                                     }}></div>
